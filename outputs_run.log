@@ -1,0 +1,225 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Using device: cpu
+PyTorch version: 2.11.0
+
+Loading CLIP (openai/clip-vit-base-patch32)...
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 18423.28it/s]
+Loading BLIP captioning (Salesforce/blip-image-captioning-base)...
+Loading weights:   0%|          | 0/473 [00:00<?, ?it/s]Loading weights: 100%|██████████| 473/473 [00:00<00:00, 27669.15it/s]
+Loading BLIP VQA (Salesforce/blip-vqa-base)...
+Loading weights:   0%|          | 0/788 [00:00<?, ?it/s]Loading weights:  61%|██████▏   | 484/788 [00:00<00:00, 4777.17it/s]Loading weights: 100%|██████████| 788/788 [00:00<00:00, 5496.99it/s]
+
+Downloading sample images from Unsplash...
+   Loaded 8 images.
+
+Computing image embeddings...
+Computing caption embeddings...
+   Similarity matrix shape: torch.Size([8, 8])
+   Saved -> /Users/sarveshkhodwe/genai/outputs/similarity_matrix.png
+
+============================================================
+  TASK 1 - Image -> Top-k Captions
+============================================================
+
+[mountain]
+   #1  (0.282)  A snow-capped mountain landscape under a clear sky
+   #2  (0.199)  A peaceful beach during a colourful sunset
+   #3  (0.191)  A passenger airplane flying through the sky
+
+[sports car]
+   #1  (0.208)  A bright red sports car parked on a road
+   #2  (0.143)  A passenger airplane flying through the sky
+   #3  (0.136)  A humanoid robot showcasing modern technology
+
+[basketball]
+   #1  (0.166)  A humanoid robot showcasing modern technology
+   #2  (0.163)  A passenger airplane flying through the sky
+   #3  (0.163)  Players competing in an indoor basketball match
+
+============================================================
+  TASK 2 - Text -> Image Retrieval
+============================================================
+
+Query: "snowy mountain peak"
+   #1  (0.272)  Image[0] -> mountain
+   #2  (0.193)  Image[1] -> beach sunset
+   #3  (0.180)  Image[3] -> sports car
+
+Query: "sunset over the ocean"
+   #1  (0.195)  Image[0] -> mountain
+   #2  (0.156)  Image[7] -> city skyline
+   #3  (0.134)  Image[5] -> basketball
+
+Query: "a fast red car"
+   #1  (0.227)  Image[3] -> sports car
+   #2  (0.190)  Image[4] -> airplane
+   #3  (0.185)  Image[5] -> basketball
+
+Query: "a tasty burger meal"
+   #1  (0.224)  Image[6] -> burger
+   #2  (0.170)  Image[0] -> mountain
+   #3  (0.166)  Image[4] -> airplane
+
+Query: "lights of a big city at night"
+   #1  (0.211)  Image[7] -> city skyline
+   #2  (0.174)  Image[0] -> mountain
+   #3  (0.164)  Image[2] -> robot
+
+============================================================
+  TASK 3 - Zero-Shot Classification
+============================================================
+
+[mountain] -> predicted: mountain  (98.8%)
+
+[beach sunset] -> predicted: robot  (70.1%)
+
+[robot] -> predicted: robot  (100.0%)
+
+[sports car] -> predicted: car  (99.6%)
+
+[airplane] -> predicted: basketball  (55.0%)
+
+[basketball] -> predicted: basketball  (57.6%)
+
+[burger] -> predicted: burger  (94.7%)
+
+[city skyline] -> predicted: city  (98.3%)
+
+============================================================
+  TASK 4 - Visual Question Answering (BLIP-VQA)
+============================================================
+
+Image: [mountain]
+   Q: What kind of landscape is shown?
+   A: mountains
+
+Image: [beach sunset]
+   Q: What time of day is it?
+   A: day
+
+Image: [sports car]
+   Q: What colour is the car?
+   A: white
+
+Image: [airplane]
+   Q: What is flying in the sky?
+   A: nothing
+
+Image: [basketball]
+   Q: What sport is being played?
+   A: soccer
+
+Image: [burger]
+   Q: What food is on the plate?
+   A: salad
+
+Image: [city skyline]
+   Q: Is this a city or a village?
+   A: city
+
+============================================================
+  TASK 5 - Caption Generation & Refinement (BLIP)
+============================================================
+
+[mountain]
+   Base    : a mountain range with a sunset in the background
+   Refined : a detailed photo of the mountains and clouds
+
+[beach sunset]
+   Base    : a camera and a small camera on a white surface
+   Refined : a detailed photo of a camera
+
+[robot]
+   Base    : a robot holding a tablet
+   Refined : a detailed photo of a robot holding a tablet
+
+[sports car]
+   Base    : mclaren 570 and mclaren 570
+   Refined : a detailed photo of the mclaren 570
+
+[airplane]
+   Base    : a woman kneeling on a track
+   Refined : a detailed photo of a female athlete on a track
+
+[basketball]
+   Base    : a soccer player kicking a soccer ball on a field
+   Refined : a detailed photo of a soccer player kicking the ball
+
+[burger]
+   Base    : three bowls of food on a wooden table
+   Refined : a detailed photo of a variety of vietnamese dishes
+
+[city skyline]
+   Base    : a city skyline with tall buildings and a street
+   Refined : a detailed photo of a cityscape
+
+======================================================================
+  FULL MULTIMODAL PIPELINE
+======================================================================
+
+-- Step 1: Image -> Top-k Captions --
+   #1 (0.208) A bright red sports car parked on a road
+   #2 (0.143) A passenger airplane flying through the sky
+   #3 (0.136) A humanoid robot showcasing modern technology
+
+-- Step 2: Caption Generation & Refinement (BLIP) --
+   Base    : mclaren 570 and mclaren 570
+   Refined : a detailed photo of the mclaren 570
+
+-- Step 3: Zero-Shot Classification --
+   Predicted: car  (99.6%)
+      car          ############################# 99.6%
+      mountain      0.2%
+      robot         0.1%
+      beach         0.0%
+      basketball    0.0%
+
+-- Step 4: Visual Q&A --
+   Q: What object is this?
+   A: car
+   Q: What colour is it?
+   A: white
+   Q: Is the vehicle moving or parked?
+   A: parked
+   Q: Describe the surroundings.
+   A: mountainous
+
+-- Step 5: Text -> Image Retrieval using Generated Caption --
+   Query: "a detailed photo of the mclaren 570"
+   #1 (0.294) Image[3] -> sports car
+   #2 (0.196) Image[1] -> beach sunset
+   #3 (0.183) Image[5] -> basketball
+
+Pipeline complete.
+
+======================================================================
+  SYSTEM SUMMARY
+======================================================================
+
+  Models
+  ------
+  Vision-Language Alignment  : openai/clip-vit-base-patch32
+  Caption Generation         : Salesforce/blip-image-captioning-base
+  Visual Question Answering  : Salesforce/blip-vqa-base
+  Device                     : CPU
+
+  Tasks Completed
+  ---------------
+  Task 1 - Image -> Top-k Caption Matching   (CLIP cosine similarity)
+  Task 2 - Text  -> Image Retrieval           (CLIP cosine similarity)
+  Task 3 - Zero-Shot Classification           (CLIP prompt engineering)
+  Task 4 - Visual Question Answering          (BLIP-VQA)
+  Task 5 - Caption Generation & Refinement    (BLIP Captioning)
+
+  Files Saved (in outputs/)
+  -------------------------
+  similarity_matrix.png
+  image_to_captions_*.png
+  text_retrieval_*.png
+  zeroshot_*.png
+  vqa_results.png
+  caption_refinement.png
+  pipeline_query.png
+  run_summary.json
+
+Saved -> /Users/sarveshkhodwe/genai/outputs/run_summary.json
